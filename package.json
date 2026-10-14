@@ -1,0 +1,42 @@
+{
+  "name": "orbit-overlay",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "npm run build:sdk && npm run build:apps && vite build",
+    "build:sdk": "vite build --config vite.sdk.config.ts && tsc --project sdk/tsconfig.json",
+    "build:apps": "node scripts/pack-apps.mjs",
+    "preview": "vite preview --host 127.0.0.1",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:windows": "node scripts/windows-apps.cjs",
+    "test:windows:panels": "node scripts/windows-panels.cjs",
+    "test:windows:apps": "node scripts/windows-apps.cjs",
+    "test:windows:features": "node scripts/windows-features.cjs",
+    "test:windows:widgets": "node scripts/windows-widgets.cjs",
+    "test:windows:presets": "node scripts/windows-presets.cjs",
+    "verify": "npm run check && npm test && npm run build && npm run test:e2e",
+    "verify:desktop": "npm run verify && cargo fmt --manifest-path src-tauri/Cargo.toml -- --check && cargo test --locked --manifest-path src-tauri/Cargo.toml && cargo clippy --locked --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings",
+    "tauri": "tauri",
+    "desktop": "tauri dev",
+    "desktop:build": "tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.8.0",
+    "svelte": "^5.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.0.0",
+    "@playwright/test": "^1.56.0",
+    "@tauri-apps/cli": "^2.8.0",
+    "@testing-library/svelte": "^5.2.0",
+    "jsdom": "^26.0.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "~5.9.0",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.0"
+  }
+}

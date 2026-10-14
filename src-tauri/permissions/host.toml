@@ -1,0 +1,30 @@
+[[permission]]
+identifier = "host-commands"
+description = "Trusted Orbit host commands, never granted to package windows."
+commands.allow = [
+  "open_tool", "hide_overlay", "frontend_ready", "finish_capture",
+  "crop_capture", "discard_capture", "get_settings", "save_settings",
+  "test_provider", "stream_chat", "cancel_chat", "check_agent", "quit_app",
+  "list_apps", "runtime_info", "preview_package", "starter_packages", "install_package",
+  "change_app", "launch_app", "set_app_shortcut", "launch_app_action",
+  "list_shortcuts", "check_app_shortcut", "set_action_shortcut", "set_shortcut_recording",
+  "get_app_preferences", "set_app_preferences", "get_theme", "set_theme", "get_locale", "set_locale",
+  "set_app_hidden", "dependency_status", "data_location", "get_home_layout", "save_home_layout",
+  "get_widget_data",
+  "get_widget_image",
+  "get_overlay_presets", "save_overlay_presets", "overlay_preset_status", "overlay_monitor", "apply_overlay_preset"
+]
+
+[[permission]]
+identifier = "persistent-widgets"
+description = "Trusted host-rendered persistent widgets: read data and launch apps, never edit host settings or presets."
+commands.allow = [
+  "persistent_view", "persistent_ready", "preview_persistent_image", "close_persistent_preview",
+  "get_widget_data", "get_widget_image", "list_apps", "dependency_status", "get_theme", "get_locale",
+  "launch_app", "launch_app_action", "open_tool"
+]
+
+[[permission]]
+identifier = "app-sdk"
+description = "Only the sender-scoped SDK broker, with per-app permissions checked in Rust."
+commands.allow = ["app_request", "app_chat"]

@@ -1,0 +1,20 @@
+:root{--orbit-bg:#11121a;--orbit-surface:#1b1924;--orbit-text:#eeeaf5;--orbit-muted:#a397af;--orbit-border:#44394f;--orbit-accent:#bba1ef;--orbit-on-accent:#251832;--orbit-hover:#352c44;--orbit-radius:8px;--orbit-control-height:32px;--orbit-focus-width:2px;--orbit-space:4px;--orbit-duration:120ms}
+:root[data-orbit-ui] header #hide svg{display:block}
+:root[data-orbit-ui] header #hide[aria-pressed=true]{color:var(--orbit-accent);background:var(--orbit-surface);box-shadow:inset 0 0 0 1px var(--orbit-accent)}
+:root[data-theme=light]{color-scheme:light;--orbit-bg:#faf9fd;--orbit-surface:#fff;--orbit-text:#272235;--orbit-muted:#696075;--orbit-border:#d8d1e1;--orbit-accent:#7350ac;--orbit-on-accent:#fff;--orbit-hover:#ede8f5}
+:root[data-orbit-ui][data-theme=light]{background:var(--orbit-bg);color:var(--orbit-text)}
+:root[data-orbit-ui][data-theme=light] header{border-color:var(--orbit-border)}
+:root[data-orbit-ui][data-theme=light] small,:root[data-orbit-ui][data-theme=light] .muted{color:var(--orbit-muted)}
+:root[data-orbit-ui][data-theme=light] button{background:#ede8f5;border-color:var(--orbit-border);color:var(--orbit-text)}
+:root[data-orbit-ui][data-theme=light] button:hover{background:#e2d8f0}
+:root[data-orbit-ui][data-theme=light] header button,:root[data-orbit-ui][data-theme=light] .resize{background:transparent;border:0}
+:root[data-orbit-ui][data-theme=light] input,:root[data-orbit-ui][data-theme=light] textarea,:root[data-orbit-ui][data-theme=light] select{background:var(--orbit-surface);border-color:var(--orbit-border);color:var(--orbit-text)}
+:root[data-orbit-ui][data-theme=light] input::placeholder,:root[data-orbit-ui][data-theme=light] textarea::placeholder{color:#797182}
+:root[data-orbit-ui][data-theme=light] .primary{background:var(--orbit-accent);color:#fff;border-color:var(--orbit-accent)}
+:root[data-orbit-ui][data-theme=light] .primary:hover{background:#624194}
+:root[data-orbit-ui][data-theme=light] #error{background:#fff0f2;color:#91384d;border-color:#dba7b3}
+:root[data-orbit-ui][data-theme=light] .message{background:#f0edf6;color:var(--orbit-text)}
+:root[data-orbit-ui][data-theme=light] .message.user{background:#e9dff8}
+:root[data-orbit-ui][data-theme=light] .timer{border-color:var(--orbit-border)}
+:root[data-orbit-ui] :is(button,input,textarea,select):focus-visible{outline:var(--orbit-focus-width) solid var(--orbit-accent);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){:root{--orbit-duration:0ms}}

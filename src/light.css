@@ -1,0 +1,76 @@
+.appearance-settings{margin-bottom:32px}
+.theme-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}
+.theme-options button{display:flex;align-items:center;gap:10px;padding:16px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--muted);text-align:left}
+.theme-options button span{flex:1}
+.theme-options button.active{border-color:var(--accent);background:#b9a0ff12;color:var(--accent)}
+:root[data-theme=light]{color:var(--orbit-text);--bg:var(--orbit-bg);--panel:var(--orbit-surface);--line:var(--orbit-border);--muted:var(--orbit-muted);--accent:var(--orbit-accent)}
+:root[data-theme=light]{--hub-surface:#faf9fcf2;--hub-line:#d7cfe6;--hub-text:#33283f;--hub-hint:var(--orbit-muted)}
+:root[data-theme=light] .app-shell.home-shell{box-shadow:none}
+:root[data-theme=light] .hub-settings{background:#faf9fcf2;color:#59416d;border-color:#d7cfe6}
+:root[data-theme=light] .app-shell{border-color:#ded9e7;box-shadow:0 25px 100px #17102b40}
+:root[data-theme=light] .sidebar{background:#f0edf5;border-color:#e2ddea}
+:root[data-theme=light] :is(.topbar,.home-footer,.recent-chat,.tip-panel,.settings-tabs,.shortcut-row,.preference-toggle,.app-shortcut-row,.package-card-actions){border-color:#e2ddea}
+:root[data-theme=light] :is(.sidebar-label,.sidebar-version,.nav-key,.breadcrumb,.breadcrumb span,.escape-label,.eyebrow,.section-heading>span,.home-footer,.tool-card-bottom>span,.fine-print,.session-notice,.composer-footnote,.package-meta){color:#776d84}
+:root[data-theme=light] :is(.nav-item,.icon-button,.breadcrumb strong,.empty-recent p,.recent-chat,.tip-panel h3,.notes-footer,.field,.checkbox-field,.shortcut-row,.message-author,.model-chip,.thinking,.panel-drag){color:#5e506f}
+:root[data-theme=light] :is(.field small,.field-hint,.tip-panel p,.empty-recent small,.provider-option small,.agent-card p){color:#786b86}
+:root[data-theme=light] :is(.brand-dot,.brand-symbol,.brand-symbol:before){color:#7452ad;border-color:#7452ad}
+:root[data-theme=light] .brand-symbol span{background:#7452ad}
+:root[data-theme=light] .nav-item:hover,:root[data-theme=light] .icon-button:hover{background:#e4dcec;color:#4c326b}
+:root[data-theme=light] .nav-item.active{background:#e4d8f2;color:#593b83}
+:root[data-theme=light] .nav-item.active svg{color:#694791}
+:root[data-theme=light] kbd{background:#eee9f5;border-color:#d6cbe3;color:#655078}
+:root[data-theme=light] :is(.tool-card,.notes-editor,.provider-option,.agent-card,.attachment,.composer,.field input,.field select,.catalog-search,.catalog-toolbar select,.app-settings-section,.shortcut-editor input){background:#fff;border-color:#ded9e7;color:#322b40}
+:root[data-theme=light] .tool-card:hover{background:#f6f1fd;border-color:#bda6db}
+:root[data-theme=light] :is(.tool-card p,.tool-card-top,.chat-welcome p,.attachment small,.capture-empty p){color:#70667e}
+:root[data-theme=light] .tool-icon{background:#eae0f6;color:#7452ad}
+:root[data-theme=light] .tool-icon.blue{background:#e1ecf9;color:#406591}
+:root[data-theme=light] .tool-icon.peach{background:#f4e7db;color:#8b5a30}
+:root[data-theme=light] .hero-orbit,:root[data-theme=light] .large-tool-icon,:root[data-theme=light] .chat-spark{border-color:#daccf0;background:#eee6fa;color:#7955a8}
+:root[data-theme=light] .hero-card{background:linear-gradient(110deg,#e9def8,#eef0f9);border-color:#d6c6ec}
+:root[data-theme=light] .hero-copy p{color:#70607d}
+:root[data-theme=light] :is(.hero-cta,.text-button,.pill,.subtle){color:#704798!important}
+:root[data-theme=light] .pill{background:#fff7;border-color:#c8b5df}
+:root[data-theme=light] .art-window{background:linear-gradient(120deg,#e5d8f2,#dcdff2);border-color:#b4a2ca}
+:root[data-theme=light] .art-selection{border-color:#9870c4;color:#694298;background:#fff4}
+:root[data-theme=light] .button.primary,:root[data-theme=light] .send-button{background:#7751ad;border-color:#694497;color:#fff}
+:root[data-theme=light] .button.primary:hover:not(:disabled){background:#684394}
+:root[data-theme=light] .button.secondary{background:#eee8f5;border-color:#d9cce7;color:#59426d}
+:root[data-theme=light] .button.secondary:hover:not(:disabled){background:#e4d9f0;border-color:#b8a0ce}
+:root[data-theme=light] .button.danger,:root[data-theme=light] .icon-button.danger:hover{color:#a23b55}
+:root[data-theme=light] :is(input,textarea)::placeholder{color:#8b8097}
+:root[data-theme=light] .composer textarea{color:#322b40}
+:root[data-theme=light] .message-text{color:#3b3048}
+:root[data-theme=light] .message-avatar{background:#eadff6;color:#724a9b}
+:root[data-theme=light] .user-message .message-avatar{background:#e1e8f3;color:#516783}
+:root[data-theme=light] .prompt-suggestions button{border-color:#d9cce7;color:#745986;background:#faf7ff}
+:root[data-theme=light] .attachment img{background:#f0edf6}
+:root[data-theme=light] .message-image{border-color:#d9cce7}
+:root[data-theme=light] .conversation-switch{color:#78678a}
+:root[data-theme=light] .conversation-switch select{background:#fff;border-color:#d9cce7;color:#59426d}
+:root[data-theme=light] .provider-option.selected{background:#f1e9fc;border-color:#9572be}
+:root[data-theme=light] .provider-symbol{background:#eee8f5;color:#614c77}
+:root[data-theme=light] .radio-dot{border-color:#b2a0c4}
+:root[data-theme=light] .selected .radio-dot{background:#7452ad;border-color:#f1e9fc;outline-color:#7452ad}
+:root[data-theme=light] .settings-tabs button{color:#756780}
+:root[data-theme=light] .settings-tabs button.active{color:#7452ad;border-color:#7452ad}
+:root[data-theme=light] .notice{background:#eee7f72e;border-color:#d8cbe9;color:#766584}
+:root[data-theme=light] .notice svg{color:#8c70a5}
+:root[data-theme=light] .privacy-note{color:#776783}
+:root[data-theme=light] .success-message,:root[data-theme=light] .stream-status{color:#357252}
+:root[data-theme=light] .toast{background:#f4edfc;border-color:#bca4d2;color:#59416d}
+:root[data-theme=light] .toast.error,:root[data-theme=light] .inline-error{background:#fff0f2;border-color:#dba7b3;color:#91384d}
+:root[data-theme=light] .capture-toolbar{background:#faf9fc;border-color:#d7cde3;color:#33283d}
+:root[data-theme=light] .capture-toolbar small{color:#776783}
+:root[data-theme=light] .selection-size{color:#f3edff}
+:root[data-theme=light] .install-options{background:#fff;border-color:#d9cce7;box-shadow:0 12px 35px #35244626}
+:root[data-theme=light] .install-options button:hover{background:#f0e8fa}
+:root[data-theme=light] .package-card.disabled-app{background:#f1eef5}
+:root[data-theme=light] .app-status{background:#f2eef7;border-color:#d9cce7;color:#74627e}
+:root[data-theme=light] .app-status.enabled{background:#eaf5ed;border-color:#c3ddc9;color:#367149}
+:root[data-theme=light] .permission-tags span{background:#eee5fa;color:#704f92}
+:root[data-theme=light] .launch-icon{background:#eee5fa;color:#704f92}
+:root[data-theme=light] .removal-confirmation{color:#934256;border-color:#d4a3b0}
+:root[data-theme=light] .shortcut-conflict{color:#835b24;background:#fff7e9;border-color:#dfc795}
+:root[data-theme=light] .shortcut-warning{color:#996119!important}
+:root[data-theme=light] ::selection{background:#c7ace866}
+@media(max-width:680px){.theme-options{gap:6px}.theme-options button{padding:12px 8px;gap:5px;font-size:11px;flex-wrap:wrap}.theme-options button>svg:last-child:not(:first-child){display:none}}

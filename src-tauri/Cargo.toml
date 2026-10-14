@@ -1,0 +1,54 @@
+[package]
+name = "orbit-overlay"
+version = "0.1.0"
+description = "An on-demand AI overlay for Windows and macOS"
+edition = "2021"
+rust-version = "1.90"
+
+[lib]
+name = "orbit_overlay"
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+embed-resource = "3"
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "macos-private-api"] }
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-dialog = "2"
+uuid = { version = "1", features = ["v4"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "rustls-tls"] }
+tokio = { version = "1", features = ["sync", "time", "process", "io-util", "macros"] }
+tokio-util = "0.7"
+futures-util = "0.3"
+eventsource-stream = "0.2"
+base64 = "0.22"
+image = { version = "0.25", default-features = false, features = ["png"] }
+sha2 = "0.10"
+url = "2"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["net", "rt-multi-thread"] }
+
+[target.'cfg(any(target_os = "windows", target_os = "macos"))'.dependencies]
+xcap = "0.9.8"
+keyring = { version = "3.6", features = ["apple-native", "windows-native"] }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.61", features = ["Win32_UI_WindowsAndMessaging", "Win32_Foundation", "Win32_Graphics_Dwm"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3", features = ["NSWindow", "NSApplication", "NSRunningApplication", "NSWorkspace"] }
+objc2-core-graphics = "0.3"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
+panic = "abort"

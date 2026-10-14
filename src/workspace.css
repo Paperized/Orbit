@@ -1,0 +1,56 @@
+:root {
+  --workspace-charcoal: #111917;
+  --workspace-paper: #edf2ef;
+  --workspace-mint: #b4e4c4;
+  --workspace-ink: #12251b;
+  --hub-surface: #141e1bef;
+  --hub-line: #b7d0c324;
+  --hub-text: #e8f0eb;
+}
+.home-shell,.persistent-surface {
+  --bg: #121b18;
+  --panel: #1c2822;
+  --line: #b7d0c321;
+  --muted: #a1b4a9;
+  --accent: var(--workspace-mint);
+  --orbit-text: #e8f0eb;
+  --orbit-bg: var(--bg);
+  --orbit-surface: var(--panel);
+  color: var(--orbit-text);
+}
+.overlay.launcher-mode{background:linear-gradient(135deg,#0c171f65,#101b1720 55%,#12201aaa)}
+.home-shell .topbar-actions{gap:10px;padding:4px 6px;border:1px solid var(--hub-line);border-radius:11px;background:var(--hub-surface)}
+.home-shell .hub-settings{border:0;background:none;padding:6px 8px;color:var(--muted)}
+.home-shell .escape-label{color:var(--muted)}
+.home-shell .icon-button:hover,.persistent-surface .icon-button:hover{color:var(--accent);background:var(--line)}
+.home-shell kbd,.persistent-surface kbd{color:var(--muted);border-color:var(--line);background:transparent}
+.home-shell .widget-frame,.persistent-surface .widget-frame{border-radius:12px;border:1px solid var(--hub-line);background:var(--hub-surface);box-shadow:0 8px 28px #0000001c}
+.home-shell .widget-frame.editing{border-color:transparent}
+.home-shell .widget-frame header{background:var(--panel)}
+.home-shell .widget-frame .widget-title,.persistent-surface .widget-frame .widget-title{background:transparent}
+.home-shell .widget-handle{letter-spacing:.2px;font-weight:550;color:var(--muted)}
+.home-shell .home-brand{gap:14px;padding:12px 18px}.home-shell .home-brand strong{font-size:22px;letter-spacing:-1px;font-weight:600}
+.home-shell .home-brand time{font-size:17px;color:var(--muted);margin-left:auto}
+.home-shell .brand-symbol,.persistent-surface .brand-symbol{border-color:var(--accent)}.home-shell .brand-symbol:before,.persistent-surface .brand-symbol:before{border-color:var(--accent)}.home-shell .brand-symbol span,.persistent-surface .brand-symbol span{background:var(--accent)}
+.home-shell .launcher-search{background:transparent;border:0;border-radius:0;padding:8px 14px}
+.home-shell .launcher-search input{font-size:14px;color:var(--orbit-text)}
+.home-shell .launcher-search input::placeholder{color:var(--muted)}
+.home-shell .browse-button:hover,.home-shell .browse-button.active{background:var(--line);color:var(--accent)}
+.home-shell .launch-icon,.persistent-surface .launch-icon{background:var(--line);color:var(--accent);border-radius:8px}
+.home-shell .starred,.persistent-surface .starred{color:var(--accent)}
+.home-shell .dock-app:hover,.persistent-surface .dock-app:hover{background:var(--line);color:var(--accent)}
+.home-shell .button.primary{background:var(--accent);border-color:var(--accent);color:var(--workspace-ink)}
+.home-shell .button.secondary{background:var(--panel);border-color:var(--line);color:var(--orbit-text)}
+.home-shell input:focus,.home-shell select:focus{border-color:var(--accent)!important;box-shadow:0 0 0 2px var(--line)}
+.persistent-window,.persistent-window body,.persistent-window #app{background:transparent!important;overflow:hidden}
+.persistent-surface .widget-frame{box-shadow:none}
+.persistent-surface .launcher{height:100dvh}
+:root[data-theme='light']{--hub-surface:#f5f8f4f5;--hub-line:#203d2b24;--hub-text:#1f3027;--workspace-mint:#276b4a;--workspace-ink:#ffffff}
+:root[data-theme='light'] .home-shell,:root[data-theme='light'] .persistent-surface{--bg:#f6f8f4;--panel:#e9eee7;--line:#25412d22;--muted:#536a5b;--orbit-text:#1f3027;--accent:#276b4a}
+:root[data-theme='light'] .overlay.launcher-mode{background:linear-gradient(135deg,#eaf1e94a,#dce8de15 55%,#dce8de6a)}
+:root[data-theme='light'] .home-shell :is(.hub-settings,.icon-button,.escape-label,kbd){color:var(--muted);border-color:var(--line);background:transparent}
+:root[data-theme='light'] .home-shell .button.primary{background:var(--accent);border-color:var(--accent);color:var(--workspace-ink)}
+:root[data-theme='light'] .home-shell .button.secondary{background:var(--panel);border-color:var(--line);color:var(--orbit-text)}
+:root[data-theme='light'] .home-shell .workspace-switcher,:root[data-theme='light'] .home-shell .preset-console{box-shadow:0 10px 30px #203d2b18}
+:root[data-theme='light'] .home-shell .launch-icon,:root[data-theme='light'] .persistent-surface .launch-icon{background:var(--line);color:var(--accent)}
+@media(prefers-reduced-motion:no-preference){.home-shell .widget-frame:not(.dragging){transition:background-color .15s,border-color .15s}.workspace-tabs button,.preset-apply{transition:background-color .15s,color .15s}}

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "home",
+    "name": "Il tuo spazio",
+    "description": "Tutti i tuoi strumenti, a un tasto di distanza.",
+    "icon": "grid",
+    "shortcut": "Ctrl+E",
+    "category": "system",
+    "capabilities": []
+  },
+  {
+    "id": "capture",
+    "name": "Cattura e chiedi",
+    "description": "Seleziona quello che vedi. Chiedi quello che vuoi.",
+    "icon": "scan",
+    "shortcut": "Ctrl+1",
+    "category": "tool",
+    "capabilities": ["screen-capture", "ai-chat"],
+    "accent": "purple"
+  },
+  {
+    "id": "chat",
+    "name": "Chat rapida",
+    "description": "Un'idea, una domanda, una risposta. Senza cambiare contesto.",
+    "icon": "chat",
+    "shortcut": null,
+    "category": "tool",
+    "capabilities": ["ai-chat"],
+    "accent": "blue"
+  },
+  {
+    "id": "notes",
+    "name": "Appunti al volo",
+    "description": "Libera la mente. Conserva un pensiero per dopo.",
+    "icon": "note",
+    "shortcut": null,
+    "category": "tool",
+    "capabilities": [],
+    "accent": "peach"
+  },
+  {
+    "id": "catalog",
+    "name": "App e catalogo",
+    "description": "Installa, aggiorna e gestisci le tue sotto-app.",
+    "icon": "grid",
+    "shortcut": null,
+    "category": "system",
+    "capabilities": []
+  },
+  {
+    "id": "settings",
+    "name": "Impostazioni",
+    "description": "Il tuo AI, alle tue condizioni.",
+    "icon": "settings",
+    "shortcut": null,
+    "category": "system",
+    "capabilities": []
+  }
+]

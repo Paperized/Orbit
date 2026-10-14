@@ -1,0 +1,49 @@
+:root{font-family:"Segoe UI",system-ui,sans-serif;color:var(--orbit-text,#eeeaf5);background:var(--orbit-bg,#11121a);color-scheme:dark;font-size:13px}
+*{box-sizing:border-box}
+body{margin:0;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+button,input,textarea,select{font:inherit;color:inherit;min-width:0}
+button{cursor:pointer;border:1px solid var(--orbit-border,#44394f);background:var(--orbit-surface,#1b1924);border-radius:var(--orbit-radius,8px);padding:7px 10px;min-height:var(--orbit-control-height,32px);transition:background-color var(--orbit-duration,120ms),border-color var(--orbit-duration,120ms)}
+button:hover{background:var(--orbit-hover,#352c44)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,input:focus,textarea:focus,select:focus{outline:2px solid var(--orbit-accent,#bba1ef);outline-offset:2px}
+header{height:40px;display:flex;gap:4px;align-items:center;padding:4px 8px;border-bottom:1px solid var(--orbit-border,#44394f);flex-shrink:0}
+header button{border:0;background:transparent;min-height:32px}
+#drag{flex:1;min-width:0;text-align:left;cursor:move;user-select:none;touch-action:none;align-self:stretch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+#hide,#close{flex:none;width:32px;display:flex;align-items:center;justify-content:center}
+main{display:flex;flex-direction:column;flex:1;min-height:0;min-width:0;padding:12px;gap:12px}
+h1,h2,p{margin:0}h1{font-size:18px;line-height:1.35;letter-spacing:-.3px}
+small,.muted{color:var(--orbit-muted,#a397af);font-size:11px;line-height:1.5}
+textarea,input,select{background:var(--orbit-surface,#1b1924);border:1px solid var(--orbit-border,#44394f);border-radius:var(--orbit-radius,8px);padding:9px}
+select{max-width:100%;text-overflow:ellipsis}
+textarea{resize:none;line-height:1.65}
+input::placeholder,textarea::placeholder{color:var(--orbit-muted,#a397af)}
+#error{background:#442b34;color:#ffced6;border:1px solid #825260;padding:9px;margin:8px 12px 0;border-radius:8px;font-size:12px;overflow-wrap:anywhere;max-height:110px;overflow:auto;flex-shrink:0}
+[hidden]{display:none!important}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.row input,.row select{min-width:0;flex:1}
+.primary{background:var(--orbit-accent,#bba1ef);color:var(--orbit-on-accent,#251832);border-color:var(--orbit-accent,#bba1ef);font-weight:600}
+.primary:hover{background:var(--orbit-accent,#bba1ef);filter:brightness(1.08)}
+.grow{flex:1;min-height:0;min-width:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.resize{position:fixed;z-index:10;padding:0;border:0;border-radius:0;background:transparent;touch-action:none;min-height:0;min-width:0}
+.resize:hover{background:transparent}
+.resize[data-edge=North],.resize[data-edge=South]{left:8px;right:8px;height:4px;cursor:ns-resize}
+.resize[data-edge=North]{top:0}.resize[data-edge=South]{bottom:0}
+.resize[data-edge=East],.resize[data-edge=West]{top:8px;bottom:8px;width:4px;cursor:ew-resize}
+.resize[data-edge=East]{right:0}.resize[data-edge=West]{left:0}
+.resize[data-edge=NorthEast],.resize[data-edge=NorthWest],.resize[data-edge=SouthEast],.resize[data-edge=SouthWest]{width:8px;height:8px}
+.resize[data-edge=NorthEast]{top:0;right:0;cursor:nesw-resize}.resize[data-edge=NorthWest]{top:0;left:0;cursor:nwse-resize}
+.resize[data-edge=SouthEast]{bottom:0;right:0;cursor:nwse-resize}.resize[data-edge=SouthWest]{bottom:0;left:0;cursor:nesw-resize}
+.message{white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0;padding:12px;border:1px solid var(--orbit-border,#44394f);border-radius:10px;background:var(--orbit-surface,#1b1924);line-height:1.65}
+.message.user{border-left:3px solid var(--orbit-accent,#bba1ef)}
+.message img{display:block;max-width:100%;max-height:130px;object-fit:contain;margin-bottom:7px}
+#attachment{max-width:100%;max-height:70px;object-fit:contain}
+.timer{border:1px solid var(--orbit-border,#44394f);padding:12px;border-radius:10px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:8px;overflow-wrap:anywhere}
+.timer button{flex-shrink:0}
+#form{display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+#form textarea{display:block;width:100%}
+#form small{flex-basis:140px}
+#sessions{flex:1;min-width:80px}
+#notes{width:100%;padding:14px}
+@media(max-width:360px){main{padding:10px;gap:10px}.row{gap:6px}.row button{padding:7px 8px}h1{font-size:16px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}

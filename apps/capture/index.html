@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Screenshot</title>
+  <link rel="stylesheet" href="common.css"><link rel="stylesheet" href="capture.css">
+  <script src="/orbit-sdk.js" defer></script><script src="ui.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+  <header><button id="drag">Screenshot</button><button id="hide" aria-label="Nascondi">_</button><button id="close" aria-label="Chiudi">×</button></header>
+  <div id="error" role="alert" hidden></div>
+  <main>
+    <div class="gallery-toolbar">
+      <div><h1>I tuoi screenshot</h1><p class="muted">Salvati sul dispositivo, dal piu recente.</p></div>
+      <div class="row"><button id="refresh" aria-label="Aggiorna galleria">Aggiorna</button><button id="capture" class="primary">Nuovo screenshot</button></div>
+    </div>
+    <div class="gallery-layout">
+      <section class="gallery-panel" aria-label="Galleria screenshot">
+        <p id="empty" class="muted">Nessuno screenshot. Cattura il primo dettaglio.</p>
+        <div id="gallery" class="gallery-grid"></div>
+        <div class="gallery-pagination"><button id="previous" aria-label="Pagina precedente">Precedente</button><span id="count"></span><button id="next" aria-label="Pagina successiva">Successiva</button></div>
+      </section>
+      <section class="detail-panel" aria-label="Anteprima screenshot">
+        <div class="detail-heading"><h2 id="selected-title">Seleziona uno screenshot</h2><small id="selected-meta"></small></div>
+        <div class="preview-area"><img id="attachment" alt="Area selezionata" hidden><p id="preview-empty" class="muted">L'anteprima comparira qui.</p></div>
+        <div class="detail-actions"><button id="send-to" class="primary" disabled>Invia a...</button><button id="delete" disabled>Elimina</button></div>
+        <div id="delete-confirmation" hidden><p>Eliminare questo screenshot dal dispositivo?</p><div class="row"><button id="confirm-delete">Elimina definitivamente</button><button id="cancel-delete">Annulla</button></div></div>
+        <div id="destinations" aria-label="Destinazioni immagine"></div>
+      </section>
+    </div>
+    <p id="status" class="muted" role="status"></p>
+  </main>
+</body>
+</html>

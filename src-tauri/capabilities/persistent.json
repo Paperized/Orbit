@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "persistent",
+  "description": "Host-owned preset widgets and original image previews.",
+  "windows": ["persistent-*"],
+  "permissions": ["persistent-widgets"]
+}

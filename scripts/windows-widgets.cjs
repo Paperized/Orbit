@@ -1,0 +1,193 @@
+const { chromium, expect } = require('@playwright/test');
+const assert = require('node:assert/strict');
+const { readFileSync, writeFileSync, readdirSync, existsSync } = require('node:fs');
+const { join } = require('node:path');
+
+(async () => {
+  const browser = await chromium.connectOverCDP('http://127.0.0.1:19329');
+  const context = browser.contexts()[0];
+  const host = context.pages().find(page => page.url().includes('tauri.localhost'));
+  const invoke = (command, args = {}) => host.evaluate(({ command, args }) => window.__TAURI_INTERNALS__.invoke(command, args), { command, args });
+  assert.equal((await invoke('runtime_info')).identifier, 'dev.orbit.runtime-test');
+  const root = await invoke('data_location');
+  assert.ok(root.endsWith('Orbit-dev.orbit.runtime-test'));
+  const persisted = () => JSON.parse(readFileSync(join(root, 'host/home.json'), 'utf8'));
+  const widget = host.getByRole('region', { name: 'Ultimi screenshot', exact: true });
+  const errors = [];
+  host.on('pageerror', error => errors.push(error.message));
+  async function home() {
+    await invoke('hide_overlay');
+    await expect(host.locator('.app-shell')).toHaveCount(0);
+    await invoke('open_tool', { tool: 'home' });
+    await expect(host.getByRole('textbox', { name: 'Cerca app e azioni' })).toBeVisible();
+  }
+  async function install(source) {
+    const preview = await invoke('preview_package', { source });
+    return invoke('install_package', { source, digest: preview.digest });
+  }
+  async function appPage(id) {
+    await expect.poll(() => context.pages().some(page => page.url().includes(`orbitapp.${id}`)), { timeout: 20000 }).toBe(true);
+    const page = context.pages().find(page => page.url().includes(`orbitapp.${id}`));
+    await page.waitForFunction(() => typeof Orbit !== 'undefined');
+    return page;
+  }
+  try {
+    await expect(host.locator('.app-shell')).toHaveAttribute('aria-busy', 'false');
+    if (process.argv.includes('--verify-restart')) {
+      const saved = JSON.parse(readFileSync(join(__dirname, 'widget-restart.json'), 'utf8'));
+      assert.deepEqual(persisted(), saved);
+      await expect(widget).toBeVisible();
+      assert.equal(context.pages().filter(p => p.url().includes('orbitapp.')).length, 0);
+      console.log('PASS: process restart restores exact widget identity/position and favorites without app windows');
+      return;
+    }
+    for (const app of await invoke('list_apps')) await invoke('change_app', { id: app.manifest.id, action: 'close', deleteData: false });
+    const source = (await invoke('starter_packages')).find(source => JSON.parse(source).manifest.id === 'orbit-capture');
+    const current = (await invoke('list_apps')).find(app => app.manifest.id === 'orbit-capture');
+    if (!current || current.manifest.version !== JSON.parse(source).manifest.version) await install(source);
+    await invoke('change_app', { id: 'orbit-capture', action: 'enable', deleteData: false });
+    await invoke('set_app_hidden', { id: 'orbit-capture', hidden: true });
+    await invoke('save_home_layout', { source: JSON.stringify({ version: 1, favorites: ['orbit-notes:open'], ai: true, clock: true }) });
+    await home();
+    await host.locator('.widget-picker summary').click();
+    await host.getByRole('button', { name: 'Ultimi screenshot', exact: true }).click();
+    await expect(widget).toBeVisible();
+    await host.keyboard.press('Escape');
+    assert.equal(context.pages().filter(p => p.url().includes('orbitapp.')).length, 0);
+    const initial = persisted();
+    assert.equal(initial.version, 3);
+    assert.deepEqual(initial.favorites, ['orbit-notes:open']);
+    assert.equal(initial.ai, true);
+    assert.equal(initial.widgets.length, 1);
+    await expect(widget.getByText(/Caricamento anteprime/)).toHaveCount(0);
+    console.log('PASS: hidden app widget is available; v1 migration preserves stars/AI; rendering opens no app');
+
+    await host.getByRole('button', { name: 'Modifica layout', exact: true }).click();
+    await widget.getByRole('button', { name: 'Sposta Ultimi screenshot' }).press('ArrowRight');
+    await expect.poll(() => persisted().widgets[0].x).toBe(initial.widgets[0].x + 1);
+    await home();
+    assert.equal(persisted().widgets[0].id, initial.widgets[0].id);
+    const handle = await widget.getByRole('button', { name: 'Sposta Ultimi screenshot' }).boundingBox();
+    await host.mouse.move(handle.x + 25, handle.y + 20); await host.mouse.down();
+    await host.mouse.move(handle.x + 25 - 100, handle.y + 20); await host.mouse.up();
+    await expect.poll(() => persisted().widgets[0].x).toBe(0);
+    assert.equal(context.pages().filter(p => p.url().includes('orbitapp.')).length, 0);
+    console.log('PASS: real native drag handle and keyboard movement persist across overlay dismissal');
+
+    await host.getByRole('slider', { name: 'Dimensione griglia' }).fill('25');
+    await expect.poll(() => persisted().gridSize).toBe(25);
+    const corner = await widget.locator('.se').boundingBox();
+    await host.mouse.move(corner.x + 5, corner.y + 5); await host.mouse.down();
+    await host.mouse.move(corner.x + 43, corner.y + 31);
+    await expect(host.locator('.grid-active')).toHaveCount(1);
+    await host.mouse.up();
+    await expect(host.locator('.grid-active')).toHaveCount(0);
+    assert.equal(persisted().widgets[0].width % 25, 0);
+    assert.equal(persisted().widgets[0].height % 25, 0);
+    await host.getByRole('slider', { name: 'Dimensione griglia' }).fill('0');
+    const searchHandle = host.getByRole('button', { name: 'Sposta Ricerca', exact: true });
+    await searchHandle.press('ArrowRight');
+    await expect.poll(() => persisted().rects.search?.width).toBeGreaterThan(0);
+    const searchWidth = persisted().rects.search.width;
+    await searchHandle.press('Shift+ArrowRight');
+    await expect.poll(() => persisted().rects.search.width).toBe(searchWidth + 1);
+    console.log('PASS: native widget resize snaps selected cell, interaction-only grid, built-in search moves/resizes');
+
+    const folder = join(root, 'apps/data/orbit-capture/files/screenshots');
+    const before = existsSync(folder) ? readdirSync(folder).filter(name => name.endsWith('.png')) : [];
+    await expect(widget.locator('.widget-actions')).toHaveCount(0);
+    await invoke('launch_app_action', { id: 'orbit-capture', actionId: 'capture' });
+    await expect(host.getByText('Seleziona un dettaglio')).toBeVisible({ timeout: 20000 });
+    await host.mouse.move(80, 100); await host.mouse.down(); await host.mouse.move(500, 340); await host.mouse.up();
+    const capture = await appPage('orbit-capture');
+    await expect.poll(() => existsSync(folder) ? readdirSync(folder).filter(name => name.endsWith('.png')).length : 0, { timeout: 20000 }).toBe(before.length + 1);
+    const created = readdirSync(folder).find(name => name.endsWith('.png') && !before.includes(name));
+    await capture.evaluate(() => Orbit.window.hide());
+    await home();
+    await expect(widget.locator('img').first()).toHaveAttribute('alt', created);
+    const dimensions = await widget.locator('img').first().evaluate(img => ({ width: img.naturalWidth, height: img.naturalHeight }));
+    assert.ok(dimensions.width <= 240 && dimensions.height <= 140);
+    await widget.getByRole('button', { name: `Ingrandisci ${created}`, exact: true }).click();
+    const preview = host.getByRole('dialog', { name: 'Anteprima screenshot' });
+    await expect(preview.locator('img')).toBeVisible();
+    assert.ok(await preview.locator('img').evaluate(img => img.naturalWidth > 240));
+    await host.keyboard.press('Escape');
+    await expect(preview).toHaveCount(0);
+    assert.equal(await capture.evaluate(async () => (await Orbit.window.getState()).visible), false);
+    const sdkData = await capture.evaluate(() => Orbit.widgets.read('recent-captures'));
+    assert.equal(sdkData.entries[0].name, created);
+    await assert.rejects(capture.evaluate(() => window.__TAURI_INTERNALS__.invoke('get_widget_data', { appId: 'orbit-capture', widgetId: 'recent-captures' })), /autorizzat|denied|not allowed/i);
+    await assert.rejects(capture.evaluate(() => window.__TAURI_INTERNALS__.invoke('app_request', { action: 'widgets.read', args: { widgetId: 'recent-captures', appId: 'other' } })), /Argomenti/);
+    await assert.rejects(capture.evaluate(() => Orbit.widgets.read('../other')), /non disponibile/);
+    const fixture = await capture.evaluate(name => Orbit.files.read(`screenshots/${name}`), created);
+    await capture.evaluate(name => Orbit.files.remove(`screenshots/${name}`), created);
+    await expect(widget.getByAltText(created, { exact: true })).toHaveCount(0, { timeout: 15000 });
+    assert.equal(await capture.evaluate(async () => (await Orbit.window.getState()).visible), false);
+    await capture.evaluate(async base64 => {
+      for (let i = 0; i < 8; i++) await Orbit.files.write(`screenshots/grid-${i}.png`, base64);
+    }, fixture.base64);
+    const options = widget.getByRole('button', { name: 'Impostazioni Ultimi screenshot' });
+    await options.click();
+    const dialog = host.getByRole('dialog', { name: 'Ultimi screenshot' });
+    await dialog.getByLabel('Righe').fill('2');
+    await dialog.getByLabel('Colonne').fill('3');
+    await dialog.getByRole('button', { name: 'Salva', exact: true }).click();
+    await expect(widget.locator('img')).toHaveCount(6);
+    assert.deepEqual(persisted().widgets[0].settings, { rows: 2, columns: 3 });
+    await expect(options).toBeFocused();
+    await home();
+    await expect(widget.locator('img')).toHaveCount(6);
+    await options.click();
+    await dialog.getByLabel('Righe').fill('1');
+    await host.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    assert.equal(persisted().widgets[0].settings.rows, 2);
+    assert.equal(await capture.evaluate(async () => (await Orbit.window.getState()).visible), false);
+    console.log('PASS: native widget settings persist 2x3 thumbnails and Escape cancels without showing provider');
+    await invoke('launch_app', { id: 'orbit-capture' });
+    assert.equal(await capture.evaluate(async () => (await Orbit.window.getState()).visible), true);
+    await invoke('change_app', { id: 'orbit-capture', action: 'close', deleteData: false });
+    console.log('PASS: widget action captures real PNG; newest-first bounded previews; SDK sender binding; deletion refresh; hidden app unaffected');
+
+    const without = JSON.parse(source);
+    without.manifest.version = '3.4.1';
+    without.manifest.widgets = [];
+    await install(JSON.stringify(without));
+    await home();
+    await expect(widget).toContainText('Widget non disponibile');
+    assert.equal(persisted().widgets[0].id, initial.widgets[0].id);
+    await invoke('change_app', { id: 'orbit-capture', action: 'rollback', deleteData: false });
+    await home();
+    await expect(widget.getByRole('button', { name: 'Impostazioni Ultimi screenshot', exact: true })).toBeEnabled();
+    await invoke('change_app', { id: 'orbit-capture', action: 'disable', deleteData: false });
+    await home();
+    await expect(widget).toContainText('Widget non disponibile');
+    await assert.rejects(invoke('get_widget_data', { appId: 'orbit-capture', widgetId: 'recent-captures' }), /disabilitata/);
+    await invoke('change_app', { id: 'orbit-capture', action: 'uninstall', deleteData: false });
+    await home();
+    await expect(widget).toContainText('Widget non disponibile');
+    await install(source);
+    await home();
+    await expect(widget.getByRole('button', { name: 'Impostazioni Ultimi screenshot', exact: true })).toBeEnabled();
+    assert.equal(persisted().widgets[0].id, initial.widgets[0].id);
+    const count = readdirSync(folder).length;
+    await widget.getByRole('button', { name: 'Rimuovi Ultimi screenshot' }).click();
+    await expect(widget).toHaveCount(0);
+    assert.equal(readdirSync(folder).length, count);
+    assert.ok((await invoke('list_apps')).some(app => app.manifest.id === 'orbit-capture'));
+    console.log('PASS: update/rollback/disable/uninstall preserve placeholder identity; removal preserves installed app and data');
+    await host.locator('.widget-picker summary').click();
+    await host.getByRole('button', { name: 'Ultimi screenshot', exact: true }).click();
+    await expect(widget).toBeVisible();
+    await host.keyboard.press('Escape');
+    const restartX = persisted().widgets[0].x;
+    await widget.getByRole('button', { name: 'Sposta Ultimi screenshot' }).press('ArrowRight');
+    await expect.poll(() => persisted().widgets[0].x).toBe(restartX + 1);
+    writeFileSync(join(__dirname, 'widget-restart.json'), JSON.stringify(persisted()));
+    await host.screenshot({ path: join(__dirname, 'widgets-native.png') });
+    assert.deepEqual(errors, []);
+  } finally {
+    await invoke('quit_app').catch(error => { if (!/closed|destroyed|disconnected/i.test(error.message)) throw error; });
+    await browser.close();
+  }
+})().catch(error => { console.error(error); process.exitCode = 1; });

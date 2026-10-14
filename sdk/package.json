@@ -1,0 +1,10 @@
+{
+  "name": "@orbit/sdk",
+  "version": "1.9.0",
+  "type": "module",
+  "description": "Orbit mini-app SDK v1",
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/orbit-sdk.mjs" }
+  }
+}

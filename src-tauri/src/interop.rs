@@ -615,7 +615,7 @@ async fn call(app: AppHandle, owner: String, args: Value) -> Result<Value, Strin
             (in_use, !in_use && hub.transient.remove(&target.app_id))
         };
         if close {
-            if let Some(window) = app.get_webview_window(&format!("app-{}", &target.app_id)) {
+            if let Some(window) = app.get_webview_window(&format!("app-{}", target.app_id)) {
                 window.destroy().map_err(|e| e.to_string())?;
             }
         }

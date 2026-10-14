@@ -238,7 +238,9 @@ mod tests {
     use super::*;
     #[test]
     fn reads_external_files_but_only_writes_and_removes_inside_own_directory() {
-        let base = std::env::temp_dir().join(format!("orbit-files-{}", uuid::Uuid::new_v4()));
+        let base = fs::canonicalize(std::env::temp_dir())
+            .unwrap()
+            .join(format!("orbit-files-{}", uuid::Uuid::new_v4()));
         let root = base.join("app/files");
         write(&root, "screenshots/hello.txt", b"hello").unwrap();
         assert_eq!(
@@ -308,13 +310,22 @@ mod tests {
     #[cfg(unix)]
     #[test]
     fn writes_reject_symlink_ancestors_and_leaf_files() {
-        let base = std::env::temp_dir().join(format!("orbit-links-{}", uuid::Uuid::new_v4()));
+        let base = fs::canonicalize(std::env::temp_dir())
+            .unwrap()
+            .join(format!("orbit-links-{}", uuid::Uuid::new_v4()));
         let root = base.join("app");
         fs::create_dir_all(&root).unwrap();
+        write(&root, "safe.txt", b"safe").unwrap();
         fs::create_dir(base.join("outside")).unwrap();
         std::os::unix::fs::symlink(base.join("outside"), root.join("link")).unwrap();
         assert!(write(&root, "link/no.txt", b"no").is_err());
         assert!(!base.join("outside/no.txt").exists());
+        let external = base.join("outside/protected.txt");
+        fs::write(&external, b"outside").unwrap();
+        std::os::unix::fs::symlink(&external, root.join("leaf.txt")).unwrap();
+        assert!(write(&root, "leaf.txt", b"no").is_err());
+        assert!(request(&root, "files.remove", json!({"path":"leaf.txt"})).is_err());
+        assert_eq!(fs::read(&external).unwrap(), b"outside");
         fs::remove_dir_all(base).unwrap();
     }
 }

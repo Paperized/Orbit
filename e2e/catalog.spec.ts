@@ -219,6 +219,7 @@ test('quick launch is a compact single-surface widget with persistent visibility
   expect((await dock.boundingBox())!.height).toBe(90);
   await expect(nav).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   await expect(nav).toHaveCSS('border-top-width', '0px');
+  await expect.poll(async () => (await dock.boundingBox())?.y).toBe(page.viewportSize()!.height - 100);
   const before = await dock.boundingBox();
   await dock.getByRole('button', { name: 'Apri Appunti', exact: true }).click();
   expect(await page.evaluate(() => (window as unknown as { catalogTestCalls: { command: string; args: { id?: string } }[] })
@@ -237,7 +238,7 @@ test('quick launch is a compact single-surface widget with persistent visibility
   await page.locator('.widget-picker summary').click();
   await toggle.check();
   await expect(dock).toBeVisible();
-  expect(await dock.boundingBox()).toEqual(before);
+  await expect.poll(() => dock.boundingBox()).toEqual(before);
   await page.evaluate(() => {
     const api = (window as unknown as { __TAURI_INTERNALS__: { invoke: (c: string, a?: unknown) => Promise<unknown> } }).__TAURI_INTERNALS__;
     const invoke = api.invoke;

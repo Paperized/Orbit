@@ -56,7 +56,10 @@ test('all builtins and app widgets resize/move freely, persist and recover from 
   expect(await saved(reopened)).toEqual(layout);
   await reopened.setViewportSize({ width: 600, height: 650 });
   for (const frame of await reopened.locator('.widget-frame').all()) {
-    const box = await frame.boundingBox(); expect(box!.x).toBeGreaterThanOrEqual(0); expect(box!.x + box!.width).toBeLessThanOrEqual(600);
+    await expect.poll(async () => {
+      const box = await frame.boundingBox();
+      return !!box && box.x >= 0 && box.x + box.width <= 600;
+    }).toBe(true);
   }
   expect(await saved(reopened)).toEqual(layout);
   await reopened.setViewportSize({ width: 1440, height: 1000 });
@@ -202,6 +205,8 @@ test('search results follow the moved and resized field and flip above at the bo
   }).toBeLessThan(2);
   await page.reload();
   await page.getByRole('textbox', { name: 'Cerca app e azioni' }).fill('chat');
-  const a = (await field.boundingBox())!, b = (await results.boundingBox())!;
-  expect(b.y + b.height).toBeLessThan(a.y);
+  await expect.poll(async () => {
+    const a = await field.boundingBox(), b = await results.boundingBox();
+    return !!a && !!b && b.y + b.height < a.y;
+  }).toBe(true);
 });

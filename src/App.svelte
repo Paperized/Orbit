@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import Icon from './components/Icon.svelte';
   import AppSettings from './tools/AppSettings.svelte';
   import { tools, getTool } from './lib/registry';
@@ -126,10 +126,9 @@
     selectedAppId = next.appId;
     activeTool.set(payload.tool);
     visible.set(true);
-    requestAnimationFrame(() => {
-      const target = payload.tool === 'home' ? shell?.querySelector<HTMLInputElement>('[data-home-search]') : null;
-      (target ?? shell)?.focus({ preventScroll: true });
-    });
+    await tick();
+    const target = payload.tool === 'home' ? shell?.querySelector<HTMLInputElement>('[data-home-search]') : null;
+    (target ?? shell)?.focus({ preventScroll: true });
   }
 
   function dragPanel(event: PointerEvent) {

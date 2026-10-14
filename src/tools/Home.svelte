@@ -203,7 +203,9 @@
         layoutBusy = false;
       });
     void refresh();
-    const observer = new ResizeObserver(() => { bounds = { width: canvas.clientWidth, height: canvas.clientHeight }; });
+    const measure = () => { bounds = { width: canvas.clientWidth, height: canvas.clientHeight }; };
+    measure();
+    const observer = new ResizeObserver(measure);
     observer.observe(canvas);
     const clock = setInterval(() => { now = new Date(); }, 1000);
     return () => { observer.disconnect(); clearInterval(clock); };
